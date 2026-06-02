@@ -1,0 +1,12 @@
+# 缓存和日志
+cache/
+*.log
+
+# 系统文件
+Thumbs.db
+.DS_Store
+*.swp
+
+# IDE
+.vscode/
+.idea/

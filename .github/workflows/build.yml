@@ -1,0 +1,75 @@
+name: Build Portable mpv
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout config
+        uses: actions/checkout@v4
+
+      - name: Download mpv (dyphire/mpv-winbuild)
+        shell: pwsh
+        run: |
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/dyphire/mpv-winbuild/releases/latest"
+          $asset = $release.assets | Where-Object { $_.name -like "mpv-x86_64-*.7z" -and $_.name -notlike "*-v3-*" -and $_.name -notlike "mpv-dev-*" } | Select-Object -First 1
+          Write-Output "Downloading mpv: $($asset.name)"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "mpv.7z"
+          7z x "mpv.7z" -o"mpv-temp"
+          $dir = Get-ChildItem "mpv-temp" -Directory | Select-Object -First 1
+          if ($dir) { Move-Item "$($dir.FullName)\*" "mpv-portable\" }
+          else { Move-Item "mpv-temp\*" "mpv-portable\" }
+
+      - name: Download FFmpeg (from same release)
+        shell: pwsh
+        run: |
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/dyphire/mpv-winbuild/releases/latest"
+          $asset = $release.assets | Where-Object { $_.name -like "ffmpeg-x86_64-*.7z" -and $_.name -notlike "*-v3-*" } | Select-Object -First 1
+          Write-Output "Downloading ffmpeg: $($asset.name)"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ffmpeg.7z"
+          7z x "ffmpeg.7z" -o"ffmpeg-temp"
+          $dir = Get-ChildItem "ffmpeg-temp" -Directory | Select-Object -First 1
+          if ($dir) {
+            Copy-Item "$($dir.FullName)\bin\ffmpeg.exe" "mpv-portable\ffmpeg.exe"
+            Copy-Item "$($dir.FullName)\bin\ffprobe.exe" "mpv-portable\ffprobe.exe"
+          } else {
+            Copy-Item "ffmpeg-temp\ffmpeg.exe" "mpv-portable\ffmpeg.exe"
+            Copy-Item "ffmpeg-temp\ffprobe.exe" "mpv-portable\ffprobe.exe"
+          }
+
+      - name: Download yt-dlp
+        shell: pwsh
+        run: |
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest"
+          $asset = $release.assets | Where-Object { $_.name -eq "yt-dlp.exe" } | Select-Object -First 1
+          Write-Output "Downloading yt-dlp: $($asset.name)"
+          Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "mpv-portable\yt-dlp.exe"
+
+      - name: Assemble portable_config
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path "mpv-portable\portable_config" -Force
+          Get-ChildItem -Path $env:GITHUB_WORKSPACE -Exclude ".git", ".github", "mpv-portable", "mpv-temp", "ffmpeg-temp", "*.7z", "*.ps1" |
+            Copy-Item -Destination "mpv-portable\portable_config" -Recurse -Force
+
+      - name: Create zip archive
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          if (-not $tag) { $tag = "nightly" }
+          Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-$tag.zip"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: mpv-config-bundle-*.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
