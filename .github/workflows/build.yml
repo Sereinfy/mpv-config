@@ -55,12 +55,16 @@ jobs:
       - name: Create zip archive
         shell: pwsh
         run: |
-          $timestamp = Get-Date -Format "yyyyMMdd"
+          $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
           Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-$timestamp.zip"
+          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
           
       - name: Create Release
         uses: softprops/action-gh-release@v2
+        env:
+          TIMESTAMP: ${{ env.TIMESTAMP }}
         with:
+          tag_name: ${{ env.TIMESTAMP }}
           files: mpv-config-bundle-*.zip
           generate_release_notes: true
           fail_on_unmatched_files: true
