@@ -53,6 +53,13 @@ jobs:
           7z x "mpv-config.zip" -o"mpv-portable" -aoa
           $confPath = "mpv-portable\portable_config\mpv.conf"
           (Get-Content $confPath) -replace 'geometry=.*', 'geometry=1600x900' | Set-Content $confPath
+
+      - name: Sync bat files from MpvCustomz
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://github.com/yudong2ao/MpvCustomz.git
+          Copy-Item -Path "MpvCustomz\*.bat" -Destination "mpv-portable\portable_config" -Force -Recurse
+          Remove-Item "MpvCustomz" -Recurse -Force
           
       - name: Create zip archive
         shell: pwsh
