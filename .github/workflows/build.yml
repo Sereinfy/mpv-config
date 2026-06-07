@@ -51,7 +51,9 @@ jobs:
           Write-Output "Downloading config: $($configAsset.name)"
           Invoke-WebRequest -Uri $configAsset.browser_download_url -OutFile "mpv-config.zip"
           7z x "mpv-config.zip" -o"mpv-portable" -aoa
-
+          $confPath = "mpv-portable\portable_config\mpv.conf"
+          (Get-Content $confPath) -replace 'geometry=.*', 'geometry=1600x900' | Set-Content $confPath
+          
       - name: Create zip archive
         shell: pwsh
         run: |
