@@ -19,7 +19,7 @@ jobs:
       - name: Download mpv (dyphire/mpv-winbuild)
         shell: pwsh
         run: |
-          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/dyphire/mpv-winbuild/releases/latest"
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/zhongfly/mpv-winbuild/releases/latest"
           $asset = $release.assets | Where-Object { $_.name -like "mpv-x86_64-*.7z" -and $_.name -notlike "*-v3-*" -and $_.name -notlike "mpv-dev-*" } | Select-Object -First 1
           Write-Output "Downloading mpv: $($asset.name)"
           Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "mpv.7z"
@@ -29,7 +29,7 @@ jobs:
       - name: Download FFmpeg (from same release)
         shell: pwsh
         run: |
-          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/dyphire/mpv-winbuild/releases/latest"
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/zhongfly/mpv-winbuild/releases/latest"
           $asset = $release.assets | Where-Object { $_.name -like "ffmpeg-x86_64-*.7z" -and $_.name -notlike "*-v3-*" } | Select-Object -First 1
           Write-Output "Downloading ffmpeg: $($asset.name)"
           Invoke-WebRequest -Uri $asset.browser_download_url -OutFile "ffmpeg.7z"
@@ -47,7 +47,7 @@ jobs:
         shell: pwsh
         run: |
           $customRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/JiayuYangX/mpv-custom/releases/latest"
-          $configAsset = $customRelease.assets | Where-Object { $_.name -like "mpv*.zip" } | Select-Object -First 1
+          $configAsset = $customRelease.assets | Where-Object { $_.name -like "mpv-custom*.zip" } | Select-Object -First 1
           Write-Output "Downloading config: $($configAsset.name)"
           Invoke-WebRequest -Uri $configAsset.browser_download_url -OutFile "mpv-config.zip"
           7z x "mpv-config.zip" -o"mpv-portable" -aoa
@@ -58,13 +58,13 @@ jobs:
         shell: pwsh
         run: |
           git clone --depth 1 https://github.com/yudong2ao/MpvCustomz.git
-          Copy-Item -Path "MpvCustomz\*.bat" -Destination "mpv-portable" -Force -Recurse
+          Copy-Item -Path "MpvCustomz\mpv-*.bat" -Destination "mpv-portable" -Force -Recurse
           Remove-Item "MpvCustomz" -Recurse -Force
           
       - name: Create zip archive
         shell: pwsh
         run: |
-          $timestamp = Get-Date -Format "yyyyMMdd"
+          $timestamp = Get-Date -Format "yyyyMMdd-ss"
           Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-$timestamp.zip"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
           
