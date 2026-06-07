@@ -55,10 +55,9 @@ jobs:
       - name: Create zip archive
         shell: pwsh
         run: |
-          $tag = $env:GITHUB_REF_NAME
-          if (-not $tag) { $tag = "nightly" }
-          Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-$tag.zip"
-
+          $timestamp = Get-Date -Format "yyyyMMdd"
+          Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-$timestamp.zip"
+          
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
