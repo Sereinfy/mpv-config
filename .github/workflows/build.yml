@@ -46,9 +46,12 @@ jobs:
       - name: Assemble portable_config
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Path "mpv-portable\portable_config" -Force
-          Get-ChildItem -Path $env:GITHUB_WORKSPACE -Exclude ".git", ".github", "mpv-portable", "*.7z" |
-            Copy-Item -Destination "mpv-portable\portable_config" -Recurse -Force
+          $customRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/JiayuYangX/mpv-custom/releases/latest"
+          $configAsset = $customRelease.assets | Where-Object { $_.name -like "mpv*.zip" } | Select-Object -First 1
+          Write-Output "Downloading config: $($configAsset.name)"
+          Invoke-WebRequest -Uri $configAsset.browser_download_url -OutFile "mpv-config.zip"
+          New-Item -ItemType Directory -Path "mpv-portable\portable_config" -Force | Out-Null
+          7z x "mpv-config.zip" -o"mpv-portable\portable_config" -aoa
 
       - name: Create zip archive
         shell: pwsh
