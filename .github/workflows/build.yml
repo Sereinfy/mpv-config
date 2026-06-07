@@ -55,7 +55,7 @@ jobs:
       - name: Create zip archive
         shell: pwsh
         run: |
-          $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+          $timestamp = Get-Date -Format "yyyyMMdd"
           Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-$timestamp.zip"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
           
