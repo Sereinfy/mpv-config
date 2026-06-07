@@ -16,16 +16,6 @@ PS：自行编辑配置文件时，注意编码格式应为 UTF-8，换行符为
 - **FFmpeg** — 同源的 ffmpeg.exe
 - **yt-dlp** — 最新版 yt-dlp.exe
 
-**触发方式：**
-推送 tag `v*` 到 GitHub 或手动在 Actions 页面触发。
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-构建完成后在 [Releases](https://github.com/xymhh/mpv-config/releases) 页面下载 `.zip` 包。
-
 ### mpv 客户端
 
 - [mpv 官网](https://mpv.io/installation) — 第三方编译版列表
