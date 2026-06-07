@@ -58,7 +58,7 @@ jobs:
         shell: pwsh
         run: |
           git clone --depth 1 https://github.com/yudong2ao/MpvCustomz.git
-          Copy-Item -Path "MpvCustomz\*.bat" -Destination "mpv-portable\portable_config" -Force -Recurse
+          Copy-Item -Path "MpvCustomz\*.bat" -Destination "mpv-portable" -Force -Recurse
           Remove-Item "MpvCustomz" -Recurse -Force
           
       - name: Create zip archive
