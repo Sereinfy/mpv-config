@@ -76,23 +76,17 @@ jobs:
           foreach ($asset in $assets) {
             Write-Output "Downloading: $($asset.name)"
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $asset.name
+            Move-Item -Path $asset.name -Destination "mpv-portable\" -Force
           }
-          $firstFile = ($assets | Sort-Object -Property name)[0].name
-          7z x $firstFile -o"mpv-portable" -aoa
 
-      - name: Create vsNV zip archive
-        shell: pwsh
-        run: |
-          $timestamp = Get-Date -Format "yyyyMMdd"
-          Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-vsNV-$timestamp.zip"
-          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
-          
       - name: Create Release
         uses: softprops/action-gh-release@v2
         env:
           TIMESTAMP: ${{ env.TIMESTAMP }}
         with:
           tag_name: ${{ env.TIMESTAMP }}
-          files: mpv-config-bundle-*.zip
+          files: |
+            mpv-config-bundle-*.zip
+            *vsNV*
           generate_release_notes: true
           fail_on_unmatched_files: true
