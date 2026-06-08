@@ -77,6 +77,15 @@ jobs:
             Write-Output "Downloading: $($asset.name)"
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $asset.name
           }
+          $firstFile = ($assets | Sort-Object -Property name)[0].name
+          7z x $firstFile -o"mpv-portable" -aoa
+          
+      - name: Create vsNV zip archive
+        shell: pwsh
+        run: |
+          $timestamp = Get-Date -Format "yyyyMMdd"
+          7z a -mx=3 -v1500m "mpv-config-bundle-vsNV-$timestamp.7z" "mpv-portable\*"
+          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -84,8 +93,6 @@ jobs:
           TIMESTAMP: ${{ env.TIMESTAMP }}
         with:
           tag_name: ${{ env.TIMESTAMP }}
-          files: |
-            mpv-config-bundle-*.zip
-            *vsNV*
+          files: mpv-config-bundle-*.zip
           generate_release_notes: true
           fail_on_unmatched_files: true
