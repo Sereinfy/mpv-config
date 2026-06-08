@@ -76,7 +76,6 @@ jobs:
           foreach ($asset in $assets) {
             Write-Output "Downloading: $($asset.name)"
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $asset.name
-            Move-Item -Path $asset.name -Destination "mpv-portable\" -Force
           }
 
       - name: Create Release
