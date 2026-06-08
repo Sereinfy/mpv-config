@@ -67,6 +67,25 @@ jobs:
           $timestamp = Get-Date -Format "yyyyMMdd"
           Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-$timestamp.zip"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
+
+      - name: Download mpv_PlayKit vsNV
+        shell: pwsh
+        run: |
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/hooke007/mpv_PlayKit/releases/latest"
+          $assets = $release.assets | Where-Object { $_.name -like "*vsNV*" }
+          foreach ($asset in $assets) {
+            Write-Output "Downloading: $($asset.name)"
+            Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $asset.name
+          }
+          $firstFile = ($assets | Sort-Object -Property name)[0].name
+          7z x $firstFile -o"mpv-portable" -aoa
+
+      - name: Create vsNV zip archive
+        shell: pwsh
+        run: |
+          $timestamp = Get-Date -Format "yyyyMMdd"
+          Compress-Archive -Path "mpv-portable\*" -DestinationPath "mpv-config-bundle-vsNV-$timestamp.zip"
+          echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
           
       - name: Create Release
         uses: softprops/action-gh-release@v2
