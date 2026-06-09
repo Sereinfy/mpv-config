@@ -80,6 +80,8 @@ jobs:
           $firstFile = ($assets | Sort-Object -Property name)[0].name
           7z x $firstFile -o"mpv-portable" -aoa
           
+          Get-ChildItem -Path "mpv-portable" -Exclude "mpv-lazy" -Recurse | Move-Item -Destination "mpv-portable\mpv-lazy\" -Force
+          
       - name: Create vsNV zip archive
         shell: pwsh
         run: |
