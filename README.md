@@ -43,3 +43,7 @@
 1. 自行安装 [Python](https://www.python.org) 和 [VapourSynth](https://www.vapoursynth.com/)
 2. 安装 [k7sfunc](https://pypi.org/project/k7sfunc/) `pip install k7sfunc`
 3. 将 vsNV 补丁包里 vs-plugins 中的所有文件解压到 VapourSynth 安装目录下的 plugins 文件夹中
+
+### 配置方案三
+
+直接下载我使用actions打包的[vsNV为整合包 ](https://github.com/Sereinfy/mpv-config/releases) 多分卷一起下载完成后解压。
