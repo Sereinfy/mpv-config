@@ -78,10 +78,11 @@ jobs:
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $asset.name
           }
           $firstFile = ($assets | Sort-Object -Property name)[0].name
-          7z x $firstFile -o"mpv-portable" -aoa
+          7z x $firstFile -aoa
           
-          Get-ChildItem -Path "mpv-portable" -Exclude "mpv-lazy" -Recurse | Move-Item -Destination "mpv-portable\mpv-lazy\" -Force
-          
+          $folder = Get-ChildItem -Directory -Filter "*lazy*" | Select-Object -First 1
+          Copy-Item -Path "$($folder.FullName)\*" -Destination "mpv-portable\" -Recurse -Force
+
       - name: Create vsNV zip archive
         shell: pwsh
         run: |
