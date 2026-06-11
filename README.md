@@ -7,6 +7,8 @@
 > 脚本和设置参考自 [mpv-config](https://github.com/dyphire/mpv-config)
 > 
 > 滤镜和着色器来源于 [mpv_PlayKit（原 mpv-lazy）](https://github.com/hooke007/mpv_PlayKit)
+>
+> AI字幕生成建议使用[Faster-Whisper-XXL](https://github.com/Purfview/whisper-standalone-win) 放置于mpv.exe同目录。模型使用large-v2[日文转中文优化模型](https://huggingface.co/chickenrice0721/whisper-large-v2-translate-zh-v0.2-st-ct2)放置于``_models``文件夹。
 
 ## GitHub 自动构建
 
@@ -15,6 +17,8 @@
 - **mpv** — [zhongfly_mpv](https://github.com/zhongfly/mpv-winbuild) 每日构建版
 - **FFmpeg** — 同源的 ffmpeg.exe
 - **yt-dlp** — 最新版 yt-dlp.exe
+
+
 
 ## mpv 客户端
 
