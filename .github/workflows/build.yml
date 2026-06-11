@@ -15,7 +15,40 @@ jobs:
     steps:
       - name: Checkout config
         uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install huggingface-hub
 
+      - name: Download model
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -c "
+          from huggingface_hub import snapshot_download
+          snapshot_download(
+              'chickenrice0721/whisper-large-v2-translate-zh-v0.2-st-ct2',
+              cache_dir='./models',
+              local_dir='./models/whisper-model'
+          )
+          "
+      
+      - name: Install 7z
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full
+      
+      - name: Compress model with 7z
+        run: |
+          cd models
+          7z a -mx=5 -v1536m whisper-model.7z whisper-model/
+          ls -lh whisper-model.7z*
+          
       - name: Download mpv (dyphire/mpv-winbuild)
         shell: pwsh
         run: |
@@ -96,6 +129,8 @@ jobs:
           TIMESTAMP: ${{ env.TIMESTAMP }}
         with:
           tag_name: ${{ env.TIMESTAMP }}
-          files: mpv-config-bundle-*
+          files: |
+            mpv-config-bundle-*
+            models/whisper-model.7z*
           generate_release_notes: true
           fail_on_unmatched_files: true
