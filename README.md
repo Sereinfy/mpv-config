@@ -8,7 +8,7 @@
 > 
 > 滤镜和着色器来源于 [mpv_PlayKit（原 mpv-lazy）](https://github.com/hooke007/mpv_PlayKit)
 >
-> AI字幕生成建议使用[Faster-Whisper-XXL](https://github.com/Purfview/whisper-standalone-win) 放置于mpv.exe同目录(需配置参数)。使用large-v2[日文转中文优化模型](https://huggingface.co/chickenrice0721/whisper-large-v2-translate-zh-v0.2-st-ct2)放置于``_models``文件夹。
+> AI字幕生成建议使用[Faster-Whisper-XXL](https://github.com/Purfview/whisper-standalone-win) 放置于mpv.exe同目录(需配置参数)。推荐使用 whisper-ja-1.5B-ct2 放置于``_models``文件夹。
 
 ## GitHub 自动构建
 
