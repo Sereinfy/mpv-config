@@ -96,8 +96,6 @@ jobs:
           TIMESTAMP: ${{ env.TIMESTAMP }}
         with:
           tag_name: ${{ env.TIMESTAMP }}
-          files: |
-            mpv-config-bundle-*
-            models/whisper-model.7z*
+          files: mpv-config-bundle-*
           generate_release_notes: true
           fail_on_unmatched_files: true
