@@ -54,7 +54,7 @@ jobs:
           $confPath = "mpv-portable\portable_config\mpv.conf"
           (Get-Content $confPath) -replace 'geometry=.*', 'geometry=1600x900' | Set-Content $confPath
           git clone --depth 1 https://github.com/Hoshirio525/My-mpv.git
-          $thumbEnginePath = "My-mpv"
+          $thumbEnginePath = "My-mpv\portable_config"
           if (Test-Path $thumbEnginePath) {
               echo "Found thumb_engine folder: $thumbEnginePath"
           } else {
