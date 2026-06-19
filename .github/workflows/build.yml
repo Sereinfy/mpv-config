@@ -53,17 +53,17 @@ jobs:
           7z x "mpv-config.zip" -o"mpv-portable" -aoa
           $confPath = "mpv-portable\portable_config\mpv.conf"
           (Get-Content $confPath) -replace 'geometry=.*', 'geometry=1600x900' | Set-Content $confPath
-
-      - name: Sync bat files from MpvCustomz
-        shell: pwsh
-        run: |
-          git clone --depth 1 https://github.com/yudong2ao/MpvCustomz.git
-          $thumbEnginePath = "MpvCustomz"
+          git clone --depth 1 https://github.com/Hoshirio525/My-mpv.git
+          $thumbEnginePath = "My-mpv"
           if (Test-Path $thumbEnginePath) {
               echo "Found thumb_engine folder: $thumbEnginePath"
           } else {
               echo "thumb_engine folder not found at: $thumbEnginePath"
           }
+      - name: Sync bat files from MpvCustomz
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://github.com/yudong2ao/MpvCustomz.git
           Copy-Item -Path "MpvCustomz\mpv-*.bat" -Destination "mpv-portable" -Force -Recurse
           Remove-Item "MpvCustomz" -Recurse -Force
           
