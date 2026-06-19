@@ -55,13 +55,12 @@ jobs:
           (Get-Content $confPath) -replace 'geometry=.*', 'geometry=1600x900' | Set-Content $confPath
 
           $scriptsPath = "mpv-portable\portable_config\scripts"
-          $ignorePath = "$scriptsPath\.ignore"
-          mkdir $ignorePath -Force | Out-Null
-          Move-Item "$scriptsPath\thumbfast.lua" "$ignorePath\" -Force -ErrorAction SilentlyContinue
+          mkdir "$scriptsPath\.ignore","$scriptsPath\thumb_engine" -Force | Out-Null
+          Move-Item "$scriptsPath\thumbfast.lua" "$scriptsPath\.ignore\" -Force -EA SilentlyContinue
           git clone https://github.com/Hoshirio525/My-mpv.git
-          Copy-Item -Path "My-mpv\portable_config\scripts\thumbfast.lua" -Destination "mpv-portable\portable_config\scripts" -Force -Recurse
-          Copy-Item -Path "My-mpv\portable_config\script-opts\thumb_engine.conf" -Destination "mpv-portable\portable_config\script-opts\" -Force -Recurse
-          Copy-Item -Path "My-mpv\portable_config\script\thumb_engine\" -Destination "mpv-portable\portable_config\script\" -Force -Recurse
+          Copy-Item "My-mpv\portable_config\scripts\thumbfast.lua" "$scriptsPath" -Force
+          Copy-Item "My-mpv\portable_config\script\thumb_engine\*" "$scriptsPath\thumb_engine" -Force -Recurse
+          Copy-Item "My-mpv\portable_config\script-opts\thumb_engine.conf" "mpv-portable\portable_config\script-opts" -Force
           Remove-Item "My-mpv" -Recurse -Force
 
       - name: Sync bat files from MpvCustomz
