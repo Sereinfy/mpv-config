@@ -60,6 +60,7 @@ jobs:
           git clone --depth 1 https://github.com/Hoshirio525/My-mpv.git
           Copy-Item "My-mpv\portable_config\scripts\thumbfast.lua" "$scriptsPath" -Force
           Copy-Item "My-mpv\portable_config\script-opts\thumb_engine.conf" "mpv-portable\portable_config\script-opts" -Force
+          Copy-Item "My-mpv\portable_config\scripts\thumb_engine\*" -Destination "mpv-portable\portable_config\scripts\" -Force -Recurse
           Remove-Item "My-mpv" -Recurse -Force
           
       - name: Sync bat files from MpvCustomz
