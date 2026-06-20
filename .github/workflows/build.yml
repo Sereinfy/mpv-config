@@ -121,7 +121,7 @@ jobs:
         run: |
           git checkout main
           
-          robocopy "mpv-portable" "." /MIR
+          robocopy "mpv-portable" "." /MIR /NFL /NDL /NP /R:1 /W:1
           
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
