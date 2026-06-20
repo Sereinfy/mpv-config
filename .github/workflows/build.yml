@@ -97,7 +97,20 @@ jobs:
           $timestamp = Get-Date -Format "yyyyMMdd"
           7z a -mx=5 -v1536m "mpv-config-bundle-vsNV-$timestamp.7z" "mpv-portable\*"
           echo "TIMESTAMP=$timestamp" >> $env:GITHUB_ENV
+      - name: Sync to Main Branch
+        shell: pwsh
+        run: |
+          git checkout main
           
+          New-Item -ItemType Directory -Path "portable_config" -Force | Out-Null
+          
+          robocopy "mpv-portable\portable_config" "portable_config" /E
+          if ($LASTEXITCODE -le 7) { $LASTEXITCODE = 0 }
+          
+          git add .
+          git commit -m "Update portable_config" || echo "No changes"
+          git push origin main
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         env:
