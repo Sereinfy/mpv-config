@@ -60,7 +60,7 @@ jobs:
           git clone --depth 1 https://github.com/Hoshirio525/My-mpv.git
           Copy-Item "My-mpv\portable_config\scripts\thumbfast.lua" "$scriptsPath" -Force
           Copy-Item "My-mpv\portable_config\script-opts\thumb_engine.conf" "mpv-portable\portable_config\script-opts" -Force
-          Copy-Item "My-mpv\portable_config\scripts\thumb_engine\*" -Destination "mpv-portable\portable_config\scripts\" -Force -Recurse
+          Copy-Item "My-mpv\portable_config\scripts\thumb_engine\*" -Destination "mpv-portable\portable_config\scripts\thumb_engine\" -Force -Recurse
           Remove-Item "My-mpv" -Recurse -Force
           
       - name: Sync bat files from MpvCustomz
@@ -108,24 +108,3 @@ jobs:
           files: mpv-config-bundle-*
           generate_release_notes: true
           fail_on_unmatched_files: true
-
-      - name: Sync mpv-portable
-        shell: pwsh
-        run: |
-          git checkout main
-          Remove-Item "mpv-config-bundle-*" -Force -ErrorAction SilentlyContinue
-          Copy-Item "mpv-portable\*" "." -Recurse -Force
-      
-      - name: Commit and Push
-        shell: pwsh
-        run: |
-          git checkout main
-          
-          robocopy "mpv-portable" "." /MIR /NFL /NDL /NP /R:1 /W:1
-          
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          git add -A
-          git commit -m "Mirror sync mpv-portable" 2>$null
-          git push origin main
