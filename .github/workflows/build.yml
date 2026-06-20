@@ -119,15 +119,13 @@ jobs:
       - name: Commit and Push
         shell: pwsh
         run: |
+          git checkout main
+          
+          robocopy "mpv-portable" "." /MIR
+          
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add .
-
-          $changes = git status --porcelain
-          if ($changes) {
-            git commit -m "Update portable_config"
-            git push origin main
-          } else {
-            Write-Host "No changes to commit."
-          }
+          
+          git add -A
+          git commit -m "Mirror sync mpv-portable" 2>$null
+          git push origin main
